@@ -26,3 +26,14 @@ describe('GET /api/topics', () => {
         })
     })
 })
+
+describe('404 error handling', () => {
+    test('404: custom error message when passed a path that is not found', () => {
+        return request(app)
+        .get('/api/notapath')
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe('NOT FOUND')
+        })
+    })
+})
