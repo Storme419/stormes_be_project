@@ -3,6 +3,7 @@ const db = require('./../db/connection')
 const seed = require('../db/seeds/seed')
 const data = require('./../db/data/test-data')
 const app = require('./../app')
+const endpoints = require('./../endpoints.json')
 
 beforeEach(() => {
     return seed(data)
@@ -11,7 +12,7 @@ afterAll(() => {
     return db.end()
 })
 
-describe('GET /api/topics', () => {
+describe('GET', () => {
     test('200:an array of topic objects with slug and description properties', () => {
         return request(app)
         .get('/api/topics')
@@ -23,6 +24,14 @@ describe('GET /api/topics', () => {
                 expect(topic).toHaveProperty('slug', expect.any(String))
                 expect(topic).toHaveProperty('description', expect.any(String))
             })
+        })
+    })
+    test('200: GET /api responds with 200 and a description of the different endpoints', () => {
+        return request(app)
+        .get('/api')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.endpoints).toEqual(endpoints)
         })
     })
 })
@@ -37,3 +46,4 @@ describe('404 error handling', () => {
         })
     })
 })
+
