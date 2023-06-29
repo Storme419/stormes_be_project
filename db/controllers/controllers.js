@@ -18,11 +18,7 @@ exports.getArticleById = (req, res, next) => {
     const {id} = req.params
     selectArticleById(id)
     .then((article) => {
-        if(article) {
-            res.status(200).send({article})
-        } else {
-            res.status(404).send({msg: 'NOT FOUND'})
-        }       
+       res.status(200).send({article})
     })
     .catch(next)
 }

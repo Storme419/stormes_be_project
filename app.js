@@ -5,7 +5,8 @@ const {
     getArticleById,
 } = require('./db/controllers/controllers')
 const {
-    handlePsqlErrors
+    handlePsqlErrors,
+    handleCustomErrors
 } = require('./errors')
 
 const app = express()
@@ -21,6 +22,8 @@ app.get('/api/articles/:id', getArticleById)
 app.all('*', (_, res) => {
     res.status(404).send({ status: 404, msg: 'NOT FOUND'})
 })
+
+app.use(handleCustomErrors)
 
 app.use(handlePsqlErrors)
 
