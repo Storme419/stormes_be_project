@@ -61,6 +61,14 @@ describe('GET', () => {
             expect(body.msg).toBe('BAD REQUEST')
         })
     })
+    test('404: GET /api/articles/:article_id responds with a 404 error if path is valid but id num not found', () => {
+        return request(app)
+        .get('/api/articles/100')
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe('NOT FOUND')
+        })
+    })
 })
 
 describe('404 error handling', () => {

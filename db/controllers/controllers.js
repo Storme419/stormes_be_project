@@ -20,6 +20,8 @@ exports.getArticleById = (req, res, next) => {
     .then((article) => {
         if(article) {
             res.status(200).send({article})
+        } else {
+            res.status(404).send({msg: 'NOT FOUND'})
         }       
     })
     .catch(next)
