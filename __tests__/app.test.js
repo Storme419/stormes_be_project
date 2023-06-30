@@ -111,6 +111,50 @@ describe('GET', () => {
             })
         })
     })
+    test('200: GET /api/articles/:article_id/comments responds with a 200 and an array of comments for the given article_id of which each comment should have the following properties: comment_id, votes, created_at, author, body, article_id', () => {
+        return request(app)
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then(({body}) => {
+            const comments = body.comment
+            expect(comments).toHaveLength(11)
+            comments.forEach((comment) => {
+                expect(comment).toHaveProperty('comment_id', expect.any(Number))
+                expect(comment).toHaveProperty('votes', expect.any(Number))
+                expect(comment).toHaveProperty('created_at', expect.any(String))
+                expect(comment).toHaveProperty('author', expect.any(String))
+                expect(comment).toHaveProperty('body', expect.any(String))
+                expect(comment.article_id).toBe(1)
+            })
+        })
+    })
+    test('200: GET /api/articles/:article_id/comments responds with a 200 and an array ordered by most recent', () => {
+        return request(app)
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then(({body}) => {
+            const comments = body.comment
+            expect(comments).toBeSortedBy('created_at', {
+                descending: true,
+            })
+        })
+    })
+    test('400: GET /api/articles/:article_id/comments responds with a 400 error if id num not valid', () => {
+        return request(app)
+        .get('/api/articles/banana/comments')
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('BAD REQUEST')
+        })
+    })
+    test('404: GET /api/articles/:article_id/comments responds with a 404 error if id num not found', () => {
+        return request(app)
+        .get('/api/articles/15/comments')
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe('NOT FOUND')
+        })
+    })
 })
 
 describe('404 error handling', () => {

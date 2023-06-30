@@ -3,7 +3,8 @@ const {
     getAllTopics,
     getApiDescriptions,
     getArticleById,
-    getAllArticles
+    getAllArticles,
+    getArticleComments
 } = require('./db/controllers/controllers')
 const {
     handlePsqlErrors,
@@ -20,6 +21,8 @@ app.get('/api', getApiDescriptions)
 app.get('/api/articles/:id', getArticleById)
 
 app.get('/api/articles', getAllArticles)
+
+app.get('/api/articles/:id/comments', getArticleComments)
 
 
 app.all('*', (_, res) => {
