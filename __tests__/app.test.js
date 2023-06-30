@@ -69,6 +69,48 @@ describe('GET', () => {
             expect(body.msg).toBe('NOT FOUND')
         })
     })
+    test('200: GET /api/articles responds with 200 and an array of article objects, each of which should have the following properties: author, title, article_id, topic, created_at, votes, article_img_url, comment_count', () => {
+        return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then(({body}) => {
+            const {articles} = body
+            expect(articles).toHaveLength(13)
+            articles.forEach((article) => {
+                expect(article).toHaveProperty('author', expect.any(String))
+                expect(article).toHaveProperty('title', expect.any(String))
+                expect(article).toHaveProperty('article_id', expect.any(Number))
+                expect(article).toHaveProperty('topic', expect.any(String))
+                expect(article).toHaveProperty('created_at', expect.any(String))
+                expect(article).toHaveProperty('votes', expect.any(Number))
+                expect(article).toHaveProperty('article_img_url', expect.any(String))
+                expect(article).toHaveProperty('comment_count', expect.any(String))
+                })
+            })
+    })
+    test('200: GET /api/articles responds with a 200 and an array of article objects that are ordered by date in descending order', () => {
+        return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then(({body}) => {
+            const {articles} = body
+            expect(articles).toBeSortedBy('created_at', {
+                descending: true,
+              })
+        })
+    })
+    test('200: GET /api/articles responds with a 200 and an array of article objects with NO body property', () => {
+        return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then(({body}) => {
+            const {articles} = body
+            expect(articles).toHaveLength(13)
+            articles.forEach(article => {
+                expect(article).not.toHaveProperty('body')
+            })
+        })
+    })
 })
 
 describe('404 error handling', () => {
