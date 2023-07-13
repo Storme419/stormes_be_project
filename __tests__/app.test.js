@@ -157,6 +157,80 @@ describe('GET', () => {
     })
 })
 
+describe('Post', () => {
+    test('201: POST /api/articles/:article_id/comments adds a comment for the article with the id', () => {
+        const newComment = {
+            username: 'butter_bridge',
+            body: "I'm enjoying this"
+        }
+        return request(app)
+        .post('/api/articles/1/comments')
+        .send(newComment)
+        .expect(201)
+        .then(({body}) => {
+            expect(body.comment).toMatchObject({
+                comment_id: expect.any(Number),
+                votes: expect.any(Number),
+                created_at: expect.any(String),
+                author: 'butter_bridge',
+                body: "I'm enjoying this",
+                article_id: 1
+            })
+        })
+    })
+    test('400: POST /api/articles/:article_id/comments responds with a 400 if username is invalid', () => {
+        const newComment = {
+            username: 'Storme',
+            body: "I'm enjoying this"
+        }
+        return request(app)
+        .post('/api/articles/1/comments')
+        .send(newComment)
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('BAD REQUEST')
+        })
+    })
+    test('400: POST /api/articles/:article_id/comments responds with a 400 if article_id is invalid', () => {
+        const newComment = {
+            username: 'butter_bridge',
+            body: "I'm enjoying this"
+        }
+        return request(app)
+        .post('/api/articles/nope/comments')
+        .send(newComment)
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('BAD REQUEST')
+        })
+    })   
+    test('400: POST /api/articles/:article_id/comments responds with a 400 if body is missing', () => {
+        const newComment = {
+            username: 'butter_bridge',
+        }
+        return request(app)
+        .post('/api/articles/1/comments')
+        .send(newComment)
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('BAD REQUEST')
+        })
+    })
+    test('404: POST /api/articles/:article_id/comments responds with a 404 if article_id does not exist', () => {
+        const newComment = {
+            username: 'butter_bridge',
+            body: "I'm enjoying this"
+        }
+        return request(app)
+        .post('/api/articles/99/comments')
+        .send(newComment)
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe('NOT FOUND')
+        })
+    })
+})
+
 describe('404 error handling', () => {
     test('404: custom error message when passed a path that is not found', () => {
         return request(app)
