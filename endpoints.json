@@ -77,5 +77,21 @@
         }
       ]
     }
+  },
+  "POST /api/articles/:id/comments": {
+    "description": "adds a new comment on an article with the username of the author of the comment and the body text of the comment",
+    "queries": [],
+    "exampleResponse": {
+      "comments": [
+        {
+          "comment_id": 10,
+          "body": "I'm enjoying this",
+          "article_id": 1,
+          "author": "butter_bridge",
+          "votes": 0,
+          "created_at": "2023-07-14T21:00:00.000Z"
+        }
+      ]
+    }
   }
 }
