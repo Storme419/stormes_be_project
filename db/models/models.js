@@ -62,15 +62,26 @@ exports.selectArticleWithComments = (id) => {
         })
 }   
 
-exports.insertComment = (article_id, username, body) => {
+exports.insertComment = (id, username, body) => {
     return db
         .query('INSERT INTO comments (article_id, author, body) VALUES ($1, $2, $3) RETURNING *;',
-        [article_id, username, body])
+        [id, username, body])
         .then(({rows}) => {
             return rows[0]
         })
         .catch((error) => {
-            console.log('error:', error);
             throw error;
         })
+}
+
+exports.updateArticleVotes = (inc_votes, id) => {
+    return db
+    .query('UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *;',
+    [inc_votes, id])
+    .then(({rows}) => {
+        if(rows.length === 0) {
+            return Promise.reject({ status: 404, msg: "NOT FOUND" })
+        }
+        return rows[0]
+    })
 }

@@ -5,7 +5,8 @@ const {
     getArticleById,
     getAllArticles,
     getArticleComments,
-    postArticleComment
+    postArticleComment,
+    patchArticleVotes
 } = require('./db/controllers/controllers')
 const {
     handlePsqlErrors,
@@ -27,7 +28,9 @@ app.get('/api/articles', getAllArticles)
 app.get('/api/articles/:id/comments', getArticleComments)
 
 
-app.post('/api/articles/:article_id/comments', postArticleComment)
+app.post('/api/articles/:id/comments', postArticleComment)
+
+app.patch('/api/articles/:id', patchArticleVotes)
 
 
 app.all('*', (_, res) => {

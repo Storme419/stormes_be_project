@@ -158,7 +158,7 @@ describe('GET', () => {
 })
 
 describe('Post', () => {
-    test('201: POST /api/articles/:article_id/comments adds a comment for the article with the id', () => {
+    test('201: POST /api/articles/:id/comments adds a comment for the article with the id', () => {
         const newComment = {
             username: 'butter_bridge',
             body: "I'm enjoying this"
@@ -178,7 +178,7 @@ describe('Post', () => {
             })
         })
     })
-    test('400: POST /api/articles/:article_id/comments responds with a 400 if username is invalid', () => {
+    test('400: POST /api/articles/:id/comments responds with a 400 if username is invalid', () => {
         const newComment = {
             username: 'Storme',
             body: "I'm enjoying this"
@@ -191,7 +191,7 @@ describe('Post', () => {
             expect(body.msg).toBe('BAD REQUEST')
         })
     })
-    test('400: POST /api/articles/:article_id/comments responds with a 400 if article_id is invalid', () => {
+    test('400: POST /api/articles/:id/comments responds with a 400 if id is invalid', () => {
         const newComment = {
             username: 'butter_bridge',
             body: "I'm enjoying this"
@@ -204,7 +204,7 @@ describe('Post', () => {
             expect(body.msg).toBe('BAD REQUEST')
         })
     })   
-    test('400: POST /api/articles/:article_id/comments responds with a 400 if body is missing', () => {
+    test('400: POST /api/articles/:id/comments responds with a 400 if body is missing', () => {
         const newComment = {
             username: 'butter_bridge',
         }
@@ -216,7 +216,7 @@ describe('Post', () => {
             expect(body.msg).toBe('BAD REQUEST')
         })
     })
-    test('404: POST /api/articles/:article_id/comments responds with a 404 if article_id does not exist', () => {
+    test('404: POST /api/articles/:id/comments responds with a 404 if id does not exist', () => {
         const newComment = {
             username: 'butter_bridge',
             body: "I'm enjoying this"
@@ -224,6 +224,72 @@ describe('Post', () => {
         return request(app)
         .post('/api/articles/99/comments')
         .send(newComment)
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe('NOT FOUND')
+        })
+    })
+})
+
+describe('PATCH', () => {
+    test('200: PATCH /api/articles/:id responds with a 200 and updated article with votes value changed depending on inc_votes', () => {
+        return request(app)
+        .patch('/api/articles/1')
+        .send({inc_votes: 1})
+        .expect(200)
+        .then(({body}) => {
+            expect(body.article).toMatchObject({
+                title: "Living in the shadow of a great man",
+                topic: "mitch",
+                author: "butter_bridge",
+                body: "I find this existence challenging",
+                created_at: '2020-07-09T20:11:00.000Z',
+                votes: 101,
+                article_img_url:
+                "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+            })
+        })
+    })
+    test('200: PATCH /api/articles/:id responds with a 200 and votes are increased by value of inc_votes if more than 1', () => {
+        return request(app)
+        .patch('/api/articles/1')
+        .send({inc_votes: 10})
+        .expect(200)
+        .then(({body}) => {
+            expect(body.article.votes).toBe(110)
+        })
+    })
+    test('200: PATCH /api/articles/:id responds with a 200 and votes are decreased by value of inc_votes if less than 0', () => {
+        return request(app)
+        .patch('/api/articles/1')
+        .send({inc_votes: -1})
+        .expect(200)
+        .then(({body}) => {
+            expect(body.article.votes).toBe(99)
+        })
+    })
+    test('400: PATCH /api/articles/:id responds with a 400 if inc_votes value is invalid', () => {
+        return request(app)
+        .patch('/api/articles/1')
+        .send({inc_votes: 'string'})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('BAD REQUEST')
+        })
+    })
+    test('400: PATCH /api/articles/:id responds with a 400 if id value is invalid', () => {
+        return request(app)
+        .patch('/api/articles/nope')
+        .send({inc_votes: 1})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('BAD REQUEST')
+        })
+    })
+    test('404: PATCH /api/articles/:id responds with a 400 if id does not exist', () => {
+        return request(app)
+        .patch('/api/articles/99')
+        .send({inc_votes: 1})
         .expect(404)
         .then(({body}) => {
             expect(body.msg).toBe('NOT FOUND')

@@ -3,7 +3,8 @@ const {
     selectArticleById, 
     selectAllArticles,
     selectArticleWithComments,
-    insertComment
+    insertComment,
+    updateArticleVotes
 } = require('./../models/models')
 const endpoints = require("./../../endpoints.json")
 
@@ -41,20 +42,32 @@ exports.getArticleComments = (req, res, next) => {
 }
 
 exports.postArticleComment = (req, res, next) => {
-    const {article_id} = req.params
+    const {id} = req.params
     const {username, body} = req.body
 
-    selectArticleById(article_id)
+    selectArticleById(id)
     
     .then(article => {
         if(!article) {
             throw{status: 404, msg: 'Not Found'}
         } else {
-            return insertComment(article_id, username, body)
+            return insertComment(id, username, body)
         }
     })
     .then((comment) => {
         res.status(201).send({comment})
+    })
+    .catch(next)
+}
+
+exports.patchArticleVotes = (req, res, next) => {
+    const {id} = req.params
+    const {inc_votes} = req.body
+
+    updateArticleVotes(inc_votes, id)
+    
+    .then((article) => {
+        res.status(200).send({article})
     })
     .catch(next)
 }
