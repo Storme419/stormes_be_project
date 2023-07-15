@@ -61,6 +61,12 @@ exports.selectArticleWithComments = (id) => {
             return rows
         })
 }   
+exports.selectAllUsers = () => {
+    return db.query('SELECT * FROM users;')
+    .then(({rows}) => {
+        return rows;
+    })
+}
 
 exports.insertComment = (id, username, body) => {
     return db

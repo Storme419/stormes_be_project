@@ -13,7 +13,7 @@ afterAll(() => {
 })
 
 describe('GET', () => {
-    test('200:an array of topic objects with slug and description properties', () => {
+    test('200: GET /api/topics responds with an array of topic objects with slug and description properties', () => {
         return request(app)
         .get('/api/topics')
         .expect(200)
@@ -153,6 +153,20 @@ describe('GET', () => {
         .expect(404)
         .then(({body}) => {
             expect(body.msg).toBe('NOT FOUND')
+        })
+    })
+    test('200: GET /api/users responds with a 200 and an array of all user objects', () => {
+        return request(app)
+        .get('/api/users')
+        .expect(200)
+        .then(({body}) => {
+            const {users} = body
+            expect(users).toHaveLength(4)
+            users.forEach((user) => {
+                expect(user).toHaveProperty('username', expect.any(String))
+                expect(user).toHaveProperty('name', expect.any(String))
+                expect(user).toHaveProperty('avatar_url', expect.any(String))
+            })
         })
     })
 })

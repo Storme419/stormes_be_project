@@ -3,6 +3,7 @@ const {
     selectArticleById, 
     selectAllArticles,
     selectArticleWithComments,
+    selectAllUsers,
     insertComment,
     updateArticleVotes,
     removeComment
@@ -41,6 +42,12 @@ exports.getArticleComments = (req, res, next) => {
     })
     .catch(next)
 }
+
+exports.getAllUsers = (req, res) => {
+    selectAllUsers()
+    .then((users) => {res.status(200).send({users})})
+}
+
 
 exports.postArticleComment = (req, res, next) => {
     const {id} = req.params

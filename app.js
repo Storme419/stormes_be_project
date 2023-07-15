@@ -5,6 +5,7 @@ const {
     getArticleById,
     getAllArticles,
     getArticleComments,
+    getAllUsers,
     postArticleComment,
     patchArticleVotes,
     deleteComment
@@ -27,6 +28,8 @@ app.get('/api/articles/:id', getArticleById)
 app.get('/api/articles', getAllArticles)
 
 app.get('/api/articles/:id/comments', getArticleComments)
+
+app.get('/api/users', getAllUsers)
 
 
 app.post('/api/articles/:id/comments', postArticleComment)
