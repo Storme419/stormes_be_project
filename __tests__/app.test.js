@@ -297,6 +297,33 @@ describe('PATCH', () => {
     })
 })
 
+describe('DELETE', () => {
+    test('204: DELETE /api/comments/:id responds with a 200 and deletes the comment associated with the id of the api', () => {
+        return request(app)
+        .delete('/api/comments/1')
+        .expect(204)
+        .then(({body}) => {
+            expect(body).toEqual({})
+        })
+    })
+    test('400: DELETE /api/comments/:id responds with a 400 if id is invalid', () => {
+        return request(app)
+        .delete('/api/comments/oops')
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('BAD REQUEST')
+        })
+    })
+    test('404: DELETE /api/comments/:id responds with a 404 error if id num not found', () => {
+        return request(app)
+        .get('/api/comments/99')
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe('NOT FOUND')
+        })
+    })
+})
+
 describe('404 error handling', () => {
     test('404: custom error message when passed a path that is not found', () => {
         return request(app)

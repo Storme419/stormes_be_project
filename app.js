@@ -6,7 +6,8 @@ const {
     getAllArticles,
     getArticleComments,
     postArticleComment,
-    patchArticleVotes
+    patchArticleVotes,
+    deleteComment
 } = require('./db/controllers/controllers')
 const {
     handlePsqlErrors,
@@ -32,6 +33,7 @@ app.post('/api/articles/:id/comments', postArticleComment)
 
 app.patch('/api/articles/:id', patchArticleVotes)
 
+app.delete('/api/comments/:id', deleteComment)
 
 app.all('*', (_, res) => {
     res.status(404).send({ status: 404, msg: 'NOT FOUND'})

@@ -4,7 +4,8 @@ const {
     selectAllArticles,
     selectArticleWithComments,
     insertComment,
-    updateArticleVotes
+    updateArticleVotes,
+    removeComment
 } = require('./../models/models')
 const endpoints = require("./../../endpoints.json")
 
@@ -68,6 +69,17 @@ exports.patchArticleVotes = (req, res, next) => {
     
     .then((article) => {
         res.status(200).send({article})
+    })
+    .catch(next)
+}
+
+exports.deleteComment = (req, res, next) => {
+    const {id} = req.params
+
+    removeComment(id)
+
+    .then(() => {
+        res.status(204).send()
     })
     .catch(next)
 }
