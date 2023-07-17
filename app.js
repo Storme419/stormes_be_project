@@ -16,11 +16,10 @@ const {
     handleCustomErrors
 } = require('./errors')
 
-app.use(cors())
-
 const app = express()
 app.use(express.json())
 
+app.use(cors())
 
 app.get('/api/topics', getAllTopics)
 
