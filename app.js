@@ -1,3 +1,4 @@
+const cors = require('cors')
 const express = require('express')
 const {
     getAllTopics,
@@ -14,6 +15,8 @@ const {
     handlePsqlErrors,
     handleCustomErrors
 } = require('./errors')
+
+app.use(cors())
 
 const app = express()
 app.use(express.json())
